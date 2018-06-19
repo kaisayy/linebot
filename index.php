@@ -25,10 +25,10 @@ if ($event->message->type == "text") {
 
     //docomoAPIに返信
     //このボットのプロファイルをget
-    $res = $bot->getprofile($event->source->userId);
+    $res = $bot->getProfile($event->source->userId);
     if($res->isSucceeded()){
         //json形式にして変数に代入
-      $userProfile = $res->getJSONdecodedBody();
+      $userProfile = $res->getJSONDecodedBody();
       $displayName = $userProfile['displayName'];
     }
     $replyMessage = chat($event->message->text, $event->source->userId, $displayName);
@@ -59,7 +59,7 @@ function chat($text, $userID, $displayName)
         'Content-Type: application/json; charset=UTF-8';
     );
     
-    options = array(
+    $options = array(
         'http'=>array(
             'method' => 'POST',
             'header' => implode("\r\n", $headers),

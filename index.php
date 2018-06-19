@@ -46,7 +46,7 @@ error_log(var_export($response,true));
 
 return;
 
-function chat($text, $userID, $displayName): string
+function chat($text, $userID, $displayName)
 {
     //docomo chatAPI
     //herokuにAPIKeyを環境変数として保存している

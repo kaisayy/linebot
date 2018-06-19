@@ -53,7 +53,7 @@ function chat($text, $userID, $displayName)
     //getenvによって環境変数をとってくる
     $api_key = getenv('docomoAPIKey');
     $api_url = sprintf('https://api.apigw.smt.docomo.ne.jp/dialogue/v1/dialogue?APIKEY=%s', $api_key);
-    $req_body = array('utt' => $text 'context' => $userID, 'nickname' => $displayName, 'place' => '松江');
+    $req_body = array('utt' => $text, 'context' => $userID, 'nickname' => $displayName, 'place' => '松江');
     
     $headers = array(
         'Content-Type: application/json; charset=UTF-8';

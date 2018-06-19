@@ -56,7 +56,7 @@ function chat($text, $userID, $displayName)
     $req_body = array('utt' => $text, 'context' => $userID, 'nickname' => $displayName, 'place' => '松江');
     
     $headers = array(
-        'Content-Type: application/json; charset=UTF-8';
+        'Content-Type: application/json; charset=UTF-8',
     );
     
     $options = array(

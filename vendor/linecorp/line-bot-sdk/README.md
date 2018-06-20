@@ -72,7 +72,7 @@ Components
 ### MessageBuilder
 
 The type of message that is sent depends on the type of instance of `MessageBuilder`.
-For example, the method sends a text message if you pass `TextMessageBuilder` and it sends an image message if you pass `ImaageMessageBuilder`.
+For example, the method sends a text message if you pass `TextMessageBuilder` and it sends an image message if you pass `ImageMessageBuilder`.
 
 For more detailed information on `MessageBuilder`, see `\LINE\LINEBot\MessageBuilder` and the namespace.
 
@@ -154,6 +154,8 @@ A full-stack (and slightly complex) sample implementation. This application demo
 
 ### PHPDoc
 
+[https://line.github.io/line-bot-sdk-php/](https://line.github.io/line-bot-sdk-php/)
+
 This library provides PHPDoc to describe how to use the methods. You can generate the documentation using [apigen](http://www.apigen.org/) using the following command.
 
 ```
@@ -179,7 +181,7 @@ Please refer [CurlHTTPClient](/src/LINEBot/HTTPClient/CurlHTTPClient.php) that i
 Requirements
 --
 
-- PHP 5.6 or later
+- PHP 5.4 or later
 
 For SDK developers
 --

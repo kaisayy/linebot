@@ -16,7 +16,8 @@ error_log(var_export($event, true));
 $httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient(getenv('LineMessageAPIChannelAccessToken'));
 $bot = new \LINE\LINEBot($httpClient, ['channelSecret' => getenv('LineMessageAPIChannelSecret')]);
 
-
+if($event->type != "message")
+  return;
 $replyMessage = null;
 // メッセージタイプが文字列の場合
 if ($event->message->type == "text") {
@@ -42,11 +43,11 @@ $textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($reply
 
 // メッセージ送信
 $response = $bot->replyMessage($event->replyToken, $textMessageBuilder);
+var_export($reponse, true);
 error_log(var_export($response,true));
-
 return;
 
-function chat($text, $userID, $displayName)
+function chat($text, $userID, $displayName): string
 {
     //docomo chatAPI
     //herokuにAPIKeyを環境変数として保存している

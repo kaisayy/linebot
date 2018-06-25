@@ -45,9 +45,11 @@ else {
 $textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($replyMessage);
 
 // メッセージ送信
+error_log("a");
 $response = $bot->replyMessage($event->replyToken, $textMessageBuilder);
-var_export($reponse, true);
+error_log("b");
 error_log(var_export($response,true));
+error_log("c");
 return;
 
 function chat($text, $userID, $displayName, $time1)
@@ -55,7 +57,6 @@ function chat($text, $userID, $displayName, $time1)
     //docomo chatAPI
     //herokuにAPIKeyを環境変数として保存している
     //getenvによって環境変数をとってくる
-error_log("a");
     $api_key = getenv('docomoAPIKey');
     $api_url1 = sprintf('https://api.apigw.smt.docomo.ne.jp/naturalChatting/v1/registration?APIKEY=%s', $api_key);
     $req_body1 = array('botId' => 'Chatting',
@@ -76,7 +77,6 @@ error_log("a");
 
     $stream1 = stream_context_create($options1);
     $res1 = json_decode(file_get_contents($api_url1, false, $stream1));
-error_log("b");
 //'context' => $userID,
 //'nickname' => $displayName, 
     $api_url2 = sprintf('https://api.apigw.smt.docomo.ne.jp/naturalChatting/v1/dialogue?APIKEY=%s', $api_key);
@@ -102,7 +102,6 @@ error_log("b");
     
     $stream2 = stream_context_create($options2);
     $res2 = json_decode(file_get_contents($api_url2, false, $stream2));
-error_log("c");
     error_log($res2->systemText->expression);
     return $res2->systemText->expression;
 }

@@ -1,6 +1,9 @@
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
 
+date_default_timezone_set('Asia/Tokyo');
+$time1 = date(Y-m-d H:i:s);
+
 error_log("start");
 
 // POSTを受け取る
@@ -32,7 +35,7 @@ if ($event->message->type == "text") {
       $userProfile = $res->getJSONDecodedBody();
       $displayName = $userProfile['displayName'];
     }
-    $replyMessage = chat($event->message->text, $event->source->userId, $displayName);
+    $replyMessage = chat($event->message->text, $event->source->userId, $displayName, $time1);
 }
 else {
     return;
@@ -47,7 +50,7 @@ var_export($reponse, true);
 error_log(var_export($response,true));
 return;
 
-function chat($text, $userID, $displayName)
+function chat($text, $userID, $displayName, $time1)
 {
     //docomo chatAPI
     //herokuにAPIKeyを環境変数として保存している
@@ -75,13 +78,16 @@ function chat($text, $userID, $displayName)
     $res1 = json_decode(file_get_contents($api_url1, false, $stream1));
 
 
+//'context' => $userID,
+
     $api_url2 = sprintf('https://api.apigw.smt.docomo.ne.jp/naturalChatting/v1/dialogue?APIKEY=%s', $api_key);
     $req_body2 = array('voiceText' => $text, 
-                      'context' => $userID, 
                       'nickname' => $displayName, 
                       'language' => 'ja-JP', 
                       'botId' => 'Chatting',
-                      'appid' => $res1->appid 
+                      'appid' => $res1->appid,
+                      'appRecvTime' => $time1,
+                      'appSendTime' => date('Y-m-d H:i:s'),
                       );
      
     $headers2 = array(  
@@ -100,5 +106,5 @@ function chat($text, $userID, $displayName)
     $res2 = json_decode(file_get_contents($api_url2, false, $stream));
 
     error_log($res->systemText->expression);
-    return $res->systemText;
+    return $res->systemText->expression;
 }

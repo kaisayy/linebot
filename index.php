@@ -78,15 +78,14 @@ error_log("a");
     $res1 = json_decode(file_get_contents($api_url1, false, $stream1));
 error_log("b");
 //'context' => $userID,
-
+//'nickname' => $displayName, 
     $api_url2 = sprintf('https://api.apigw.smt.docomo.ne.jp/naturalChatting/v1/dialogue?APIKEY=%s', $api_key);
     $req_body2 = array('voiceText' => $text, 
-                      'nickname' => $displayName, 
                       'language' => 'ja-JP', 
                       'botId' => 'Chatting',
                       'appId' => $res1->appId,
                       'appRecvTime' => $time1,
-                      'appSendTime' => date('Y-m-d H:i:s'),
+                      'appSendTime' => date('Y-m-d H:i:s')
                       );
      
     $headers2 = array(  

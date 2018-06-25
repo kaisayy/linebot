@@ -96,7 +96,7 @@ error_log("b");
         'http'=>array(
             'method' => 'POST',
             'header' => implode("\r\n", $headers2),
-            'content' => json_encode($req_body),
+            'content' => json_encode($req_body2),
             )
         );
     

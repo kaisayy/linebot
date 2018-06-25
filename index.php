@@ -55,7 +55,7 @@ function chat($text, $userID, $displayName, $time1)
     //docomo chatAPI
     //herokuにAPIKeyを環境変数として保存している
     //getenvによって環境変数をとってくる
-
+error_log("a");
     $api_key = getenv('docomoAPIKey');
     $api_url1 = sprintf('https://api.apigw.smt.docomo.ne.jp/naturalChatting/v1/registration?APIKEY=%s', $api_key);
     $req_body1 = array('botid' => "Chatting",
@@ -76,8 +76,7 @@ function chat($text, $userID, $displayName, $time1)
 
     $stream1 = stream_context_create($options1);
     $res1 = json_decode(file_get_contents($api_url1, false, $stream1));
-
-
+error_log("b");
 //'context' => $userID,
 
     $api_url2 = sprintf('https://api.apigw.smt.docomo.ne.jp/naturalChatting/v1/dialogue?APIKEY=%s', $api_key);
@@ -104,7 +103,7 @@ function chat($text, $userID, $displayName, $time1)
     
     $stream2 = stream_context_create($options2);
     $res2 = json_decode(file_get_contents($api_url2, false, $stream));
-
+error_log("c");
     error_log($res->systemText->expression);
     return $res->systemText->expression;
 }

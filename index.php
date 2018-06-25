@@ -99,6 +99,6 @@ function chat($text, $userID, $displayName)
     $stream2 = stream_context_create($options2);
     $res2 = json_decode(file_get_contents($api_url2, false, $stream));
 
-    error_log($res->systemText);
+    error_log($res->systemText->expression);
     return $res->systemText;
 }

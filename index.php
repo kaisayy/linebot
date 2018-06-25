@@ -52,25 +52,53 @@ function chat($text, $userID, $displayName)
     //docomo chatAPI
     //herokuにAPIKeyを環境変数として保存している
     //getenvによって環境変数をとってくる
- 
+
     $api_key = getenv('docomoAPIKey');
-    $api_url = sprintf('https://api.apigw.smt.docomo.ne.jp/naturalChatting/v1/dialogue?APIKEY=%s', $api_key);
-    $req_body = array('voiceText' => $text, 'context' => $userID, 'nickname' => $displayName, 'language' => "ja-JP", 'botId' => "Chatting" );
+    $api_url1 = sprintf('https://api.apigw.smt.docomo.ne.jp/naturalChatting/v1/registration?APIKEY=%s', $api_key);
+    $req_body1 = array('botid' => "Chatting",
+                      'appkind' => "Smart Phone"
+                      );
+
+    $headers1 = array(  
+        'Content-Type: application/json; charset=UTF-8',
+    );
+
+    $options1 = array(
+        'http'=>array(
+            'method' => 'POST',
+            'header' => implode("\r\n", $headers1),
+            'content' => json_encode($req_body1),
+            )
+        );    
+
+    $stream1 = stream_context_create($options1);
+    $res1 = json_decode(file_get_contents($api_url1, false, $stream1));
+
+
+    $api_url2 = sprintf('https://api.apigw.smt.docomo.ne.jp/naturalChatting/v1/dialogue?APIKEY=%s', $api_key);
+    $req_body2 = array('voiceText' => $text, 
+                      'context' => $userID, 
+                      'nickname' => $displayName, 
+                      'language' => 'ja-JP', 
+                      'botId' => 'Chatting',
+                      'appid' => $res1->appid 
+                      );
      
-    $headers = array(  
+    $headers2 = array(  
         'Content-Type: application/json; charset=UTF-8',
     );
     
-    $options = array(
+    $options2 = array(
         'http'=>array(
             'method' => 'POST',
-            'header' => implode("\r\n", $headers),
+            'header' => implode("\r\n", $headers2),
             'content' => json_encode($req_body),
             )
         );
     
-    $stream = stream_context_create($options);
-    $res = json_decode(file_get_contents($api_url, false, $stream));
-    error_log($res->utt);
-    return $res->utt;
+    $stream2 = stream_context_create($options2);
+    $res2 = json_decode(file_get_contents($api_url2, false, $stream));
+
+    error_log($res->systemText);
+    return $res->systemText;
 }

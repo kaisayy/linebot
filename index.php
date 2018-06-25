@@ -16,7 +16,7 @@ $event = $json->events[0];
 error_log(var_export($event, true));
 
 // ChannelAccessTokenとChannelSecret設定
-$httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient(getenv('LineAPIChannelAccessToken'));
+$httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient(getenv('LineMessageAPIChannelAccessToken'));
 $bot = new \LINE\LINEBot($httpClient, ['channelSecret' => getenv('LineMessageAPIChannelSecret')]);
 
 if($event->type != "message")

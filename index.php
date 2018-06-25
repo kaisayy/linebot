@@ -84,7 +84,7 @@ error_log("b");
                       'nickname' => $displayName, 
                       'language' => 'ja-JP', 
                       'botId' => 'Chatting',
-                      'appid' => $res1->appid,
+                      'appId' => $res1->appId,
                       'appRecvTime' => $time1,
                       'appSendTime' => date('Y-m-d H:i:s'),
                       );

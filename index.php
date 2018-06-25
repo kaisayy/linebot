@@ -103,6 +103,6 @@ error_log("b");
     $stream2 = stream_context_create($options2);
     $res2 = json_decode(file_get_contents($api_url2, false, $stream2));
 error_log("c");
-    error_log($res->systemText->expression);
-    return $res->systemText->expression;
+    error_log($res2->systemText->expression);
+    return $res2->systemText->expression;
 }

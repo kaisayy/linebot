@@ -2,7 +2,7 @@
 require_once __DIR__ . '/vendor/autoload.php';
 
 date_default_timezone_set('Asia/Tokyo');
-$time1 = date(Y-m-d H:i:s);
+$time1 = date('Y-m-d H:i:s');
 
 error_log("start");
 

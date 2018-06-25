@@ -7,32 +7,33 @@ error_log("start");
 $postData = file_get_contents('php://input');
 error_log($postData);
 
-// jeson化
+//POSTで受け取った値をjson化
 $json = json_decode($postData);
 $event = $json->events[0];
 error_log(var_export($event, true));
 
 // ChannelAccessTokenとChannelSecret設定
-$httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient(getenv('LineMessageAPIChannelAccessToken'));
+$httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient(getenv('LineAPIChannelAccessToken'));
 $bot = new \LINE\LINEBot($httpClient, ['channelSecret' => getenv('LineMessageAPIChannelSecret')]);
 
-// イベントタイプがmessage以外はスルー
-if ($event->type != "message")
-    return;
+if($event->type != "message")
+  return;
 $replyMessage = null;
 // メッセージタイプが文字列の場合
 if ($event->message->type == "text") {
+    //送られてきたメッセージをそのまま変身
     //$replyMessage = $event->message->text;
-    //docomo返信
+
+    //docomoAPIに返信
+    //このボットのプロファイルをget
     $res = $bot->getProfile($event->source->userId);
-    if ($res->isSucceeded()) {
+    if($res->isSucceeded()){
+        //json形式にして変数に代入
       $userProfile = $res->getJSONDecodedBody();
       $displayName = $userProfile['displayName'];
     }
     $replyMessage = chat($event->message->text, $event->source->userId, $displayName);
-
 }
-//文字列以外は無視
 else {
     return;
 }
@@ -42,30 +43,32 @@ $textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($reply
 
 // メッセージ送信
 $response = $bot->replyMessage($event->replyToken, $textMessageBuilder);
-var_export($response, true);
+var_export($reponse, true);
 error_log(var_export($response,true));
 return;
 
-
-//ドコモの雑談APIから雑談データを取得
-//From "https://qiita.com/Yuta_Fujiwara/items/281d3e36845b37872a16"
 function chat($text, $userID, $displayName)
 {
-    // docomo chatAPI
+    //docomo chatAPI
+    //herokuにAPIKeyを環境変数として保存している
+    //getenvによって環境変数をとってくる
+ 
     $api_key = getenv('docomoAPIKey');
-    $api_url = sprintf('https://api.apigw.smt.docomo.ne.jp/dialogue/v1/dialogue?APIKEY=%s', $api_key);
-    $req_body = array('utt' => $text, 'context' => $userID, 'nickname' => $displayName, 'place' => '松江');
-
-    $headers = array(
+    $api_url = sprintf('https://api.apigw.smt.docomo.ne.jp/naturalChatting/v1/dialogue?APIKEY=%s', $api_key);
+    $req_body = array('voiceText' => $text, 'context' => $userID, 'nickname' => $displayName, 'language' => "ja-JP", 'botId' => "Chatting" );
+     
+    $headers = array(  
         'Content-Type: application/json; charset=UTF-8',
     );
+    
     $options = array(
         'http'=>array(
-            'method'  => 'POST',
-            'header'  => implode("\r\n", $headers),
+            'method' => 'POST',
+            'header' => implode("\r\n", $headers),
             'content' => json_encode($req_body),
             )
         );
+    
     $stream = stream_context_create($options);
     $res = json_decode(file_get_contents($api_url, false, $stream));
     error_log($res->utt);

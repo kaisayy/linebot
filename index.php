@@ -58,8 +58,8 @@ function chat($text, $userID, $displayName, $time1)
 error_log("a");
     $api_key = getenv('docomoAPIKey');
     $api_url1 = sprintf('https://api.apigw.smt.docomo.ne.jp/naturalChatting/v1/registration?APIKEY=%s', $api_key);
-    $req_body1 = array('botid' => "Chatting",
-                      'appKind' => "Smart Phone"
+    $req_body1 = array('botId' => 'Chatting',
+                      'appKind' => 'Smart Phone'
                       );
 
     $headers1 = array(  

@@ -84,6 +84,11 @@ function chat($text, $userID, $displayName, $time1)
                       'language' => 'ja-JP', 
                       'botId' => 'Chatting',
                       'appId' => $res1->appId,
+                      'clientData' => array(
+                                    'option' => array(
+                                               'mode' => $_SESSION['chat_mode'],
+                                               ),
+                                    ),
                       'appRecvTime' => $time1,
                       'appSendTime' => date('Y-m-d H:i:s')
                       );
@@ -102,13 +107,9 @@ function chat($text, $userID, $displayName, $time1)
     
     $stream2 = stream_context_create($options2);
     $res2 = json_decode(file_get_contents($api_url2, false, $stream2));
-
-    if($res2->command->mode == "srtr"){
-        $req_body2->clientData->option->mode = "srtr";
-    }
-    else{
-        $req_body2->clientData->option->mode = "dialog";
-    }
+    $cmd_mode = base64_decode($res->command);
+    $chat_mode = json_decode($cmd_mode);
+    $_SESSION['chat_mode'] = $chat_mode->mode;
 
     error_log($res2->systemText->expression);
     return $res2->systemText->expression;

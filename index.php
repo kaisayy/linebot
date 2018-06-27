@@ -90,7 +90,7 @@ function chat($text, $userID, $displayName, $time1)
                       'appId' => $res1->appId,
                       'clientData' => array(
                                     'option' => array(
-                                               'mode' => $_SESSION['chat_mode'],
+                                               'mode' => $_SESSION['chat_mode']
                                                ),
                                     ),
                       'appRecvTime' => $time1,

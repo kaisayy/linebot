@@ -112,7 +112,7 @@ function chat($text, $userID, $displayName, $time1)
     $cmd_mode = base64_decode($res2->command);
     $chat_mode = json_decode($cmd_mode);
     $_SESSION['chat_mode'] = $chat_mode->mode;
-
+    error_log($_SESSION['chat_mode']);
     error_log($res2->systemText->expression);
     return $res2->systemText->expression;
 }

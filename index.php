@@ -86,7 +86,7 @@ function chat($text, $userID, $displayName, $time1)
                       'appId' => $res1->appId,
                       'clientData' => array(
                                     'option' => array(
-                                               'mode' => $_SESSION['chat_mode'],
+                                               'mode' => $chat_mode,
                                                ),
                                     ),
                       'appRecvTime' => $time1,
@@ -104,12 +104,14 @@ function chat($text, $userID, $displayName, $time1)
             'content' => json_encode($req_body2),
             )
         );
-    
+
+//$_SESSION['chat_mode'] = $chat_mode->mode;
+
     $stream2 = stream_context_create($options2);
     $res2 = json_decode(file_get_contents($api_url2, false, $stream2));
     $cmd_mode = base64_decode($res->command);
-    $chat_mode = json_decode($cmd_mode);
-    $_SESSION['chat_mode'] = $chat_mode->mode;
+    $chat_json_mode = json_decode($cmd_mode);
+    $chat_mode = $chat_json_mode->mode;
 
     error_log($res2->systemText->expression);
     return $res2->systemText->expression;

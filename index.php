@@ -113,9 +113,10 @@ function chat($text, $userID, $displayName, $time1)
 
     $stream2 = stream_context_create($options2);
     $res2 = json_decode(file_get_contents($api_url2, false, $stream2));
-    $cmd_mode = base64_decode($res2->command);
-    $chat_mode = json_decode($cmd_mode);
-    $_SESSION['chat_mode'] = $chat_mode->mode;
+//    $cmd_mode = base64_decode($res2->command);
+//    $chat_mode = json_decode($cmd_mode);
+//    $_SESSION['chat_mode'] = $chat_mode->mode;
+      $_SESSION['chat_mode'] = $res->command->mode;
     error_log($_SESSION['chat_mode']);
     error_log($res2->systemText->expression);
     return $res2->systemText->expression;

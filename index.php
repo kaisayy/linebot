@@ -103,11 +103,11 @@ function chat($text, $userID, $displayName, $time1)
     $stream2 = stream_context_create($options2);
     $res2 = json_decode(file_get_contents($api_url2, false, $stream2));
 
-    if($res2->command->mode == srtr){
-        $req_body2->clientData->option->mode = srtr;
+    if($res2->command->mode == "srtr"){
+        $req_body2->clientData->option->mode = "srtr";
     }
     else{
-        $req_body2->clientData->option->mode = dialog;
+        $req_body2->clientData->option->mode = "dialog";
     }
 
     error_log($res2->systemText->expression);

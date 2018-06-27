@@ -1,8 +1,12 @@
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
 
+//時間を設定
 date_default_timezone_set('Asia/Tokyo');
 $time1 = date('Y-m-d H:i:s');
+
+//セッション管理スタート
+session_start();
 
 error_log("start");
 

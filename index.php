@@ -96,7 +96,8 @@ function chat($text, $userID, $displayName, $time1)
                       'appRecvTime' => $time1,
                       'appSendTime' => date('Y-m-d H:i:s')
                       );
-     
+    error_log($_SESSION['chat_mode']);
+
     $headers2 = array(  
         'Content-Type: application/json; charset=UTF-8',
     );
@@ -113,10 +114,14 @@ function chat($text, $userID, $displayName, $time1)
 
     $stream2 = stream_context_create($options2);
     $res2 = json_decode(file_get_contents($api_url2, false, $stream2));
+
+//しりとり参考URL
+//http://blog.web-arena.com/docomo_developer_support_about_chat_dialogue_api/
+
+//base64で送られてくるからdecodeし、さらにjson_decode
     $cmd_mode = base64_decode($res2->command);
     $chat_mode = json_decode($cmd_mode);
     $_SESSION['chat_mode'] = $chat_mode->mode;
-//      $_SESSION['chat_mode'] = $res->command->mode;
     error_log($_SESSION['chat_mode']);
     error_log($res2->systemText->expression);
     return $res2->systemText->expression;

@@ -50,8 +50,8 @@ if ($event->message->type == "text") {
         die();
     }
 
-    $result = $stmt->fetchAll();
-    if( empty($result['userid'] )){//データが無ければ作成
+    
+    if( $result = $stmt->fetchAll()){//データが無ければ作成
        try{
           $stmt = $pdo->prepare("insert into siritori values(:userid, 'dialog')");
           $stmt->bindParam(':userid', $event->source->userId, PDO::PARAM_STR);   

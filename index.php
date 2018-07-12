@@ -70,6 +70,7 @@ try{
        }catch(PDOException $e) {
          error_log("PDO Error:".$e->getMessage()."\n");
          die();
+       }
     }
     $mode = $result["status"];
 

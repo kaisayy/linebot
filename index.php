@@ -61,18 +61,19 @@ if ($event->message->type == "text") {
          die();
        }
     }
+    $mode = $result["status"];
+
     //データがあったら調べる
     if($mode == "dialog" && $event->message->text == "しりとり"){
-try{
-      $stmt = $pdo->prepare("update siritori set state = 'srtr' where userid = :userid");
-      $stmt->bindParam(':userid', $event->source->userId, PDO::PARAM_STR);
-      $stmt->execute();
-       }catch(PDOException $e) {
+      try{
+        $stmt = $pdo->prepare("update siritori set state = 'srtr' where userid = :userid");
+        $stmt->bindParam(':userid', $event->source->userId, PDO::PARAM_STR);
+        $stmt->execute();
+      }catch(PDOException $e) {
          error_log("PDO Error:".$e->getMessage()."\n");
          die();
-       }
+      }
     }
-    $mode = $result["status"];
 
     $replyMessage = chat($event->message->text, $event->source->userId, $displayName, $time1, $mode);
 
@@ -85,11 +86,11 @@ else {
 $textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($replyMessage);
 
 // メッセージ送信
-error_log("a");
+//error_log("a");
 $response = $bot->replyMessage($event->replyToken, $textMessageBuilder);
-error_log("b");
+//error_log("b");
 error_log(var_export($response,true));
-error_log("c");
+//error_log("c");
 return;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

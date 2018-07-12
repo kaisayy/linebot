@@ -61,7 +61,7 @@ if ($event->message->type == "text") {
          die();
        }
     }
-    $mode = $result["status"];
+    $mode = $result["state"];
 
     //データがあったら調べる
     if($mode == "dialog" && $event->message->text == "しりとり"){

@@ -28,7 +28,7 @@ if($event->type != "message")
 $replyMessage = null;
 // メッセージタイプが文字列の場合
 if ($event->message->type == "text") {
-    //送られてきたメッセージをそのまま変身
+    //送られてきたメッセージをそのまま返信
     //$replyMessage = $event->message->text;
 
     //docomoAPIに返信
@@ -39,7 +39,39 @@ if ($event->message->type == "text") {
       $userProfile = $res->getJSONDecodedBody();
       $displayName = $userProfile['displayName'];
     }
-    $replyMessage = chat($event->message->text, $event->source->userId, $displayName, $time1);
+    //データベース接続
+    try{
+        $pdo = connectDataBase();
+        $stmt = $pdo->prepare("select * from siritori where userid = :userid");
+        $stmt->bindParam(':userid', $event->source->userId, PDO::PARAM_STR);
+        $stmt->execute();
+    }catch(PDOException $e){
+        error_log("PDO Error:".$e->getMessage()."\n");
+        die();
+    }
+
+    $result = $stmt->fetchAll();
+    if( empty($result['userid'] ){//データが無ければ作成
+       try{
+          $stmt = $pdo->prepare("insert into siritori values(:userid, 'dialog')");
+          $stmt->bindParam(':userid', $event->source->userId, PDO::PARAM_STR);   
+          $stmt->execute();
+       }catch(PDOException $e) {
+         error_log("PDO Error:".$e->getMessage()."\n");
+         die();
+       }
+    }
+    else{//データがあったら調べる
+      if($mode == "dialog" && $event->message->text == "しりとり"){
+        $stmt = $pdo->prepare("update siritori set status = 'srtr', where userid = :userid");
+        $stmt->bindParam(':userid', $event->source->userId, PDO::PARAM_STR);
+        $stmt->execute();
+      }
+      $mode = $result["status"];
+    }
+
+    $replyMessage = chat($event->message->text, $event->source->userId, $displayName, $time1, $mode);
+
 }
 else {
     return;
@@ -56,7 +88,11 @@ error_log(var_export($response,true));
 error_log("c");
 return;
 
-function chat($text, $userID, $displayName, $time1)
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function chat($text, $userID, $displayName, $time1 ,$mode)
 {
     //docomo chatAPI
     //herokuにAPIKeyを環境変数として保存している
@@ -81,6 +117,8 @@ function chat($text, $userID, $displayName, $time1)
 
     $stream1 = stream_context_create($options1);
     $res1 = json_decode(file_get_contents($api_url1, false, $stream1));
+
+
 //'context' => $userID,
 //'nickname' => $displayName, 
     $api_url2 = sprintf('https://api.apigw.smt.docomo.ne.jp/naturalChatting/v1/dialogue?APIKEY=%s', $api_key);
@@ -90,13 +128,12 @@ function chat($text, $userID, $displayName, $time1)
                       'appId' => $res1->appId,
                       'clientData' => array(
                                     'option' => array(
-                                               'mode' => $_SESSION['chat_mode']
+                                               'mode' => $mode
                                                ),
                                     ),
                       'appRecvTime' => $time1,
                       'appSendTime' => date('Y-m-d H:i:s')
                       );
-    error_log($_SESSION['chat_mode']);
 
     $headers2 = array(  
         'Content-Type: application/json; charset=UTF-8',
@@ -121,8 +158,18 @@ function chat($text, $userID, $displayName, $time1)
 //base64で送られてくるからdecodeし、さらにjson_decode
     $cmd_mode = base64_decode($res2->command);
     $chat_mode = json_decode($cmd_mode);
-    $_SESSION['chat_mode'] = $chat_mode->mode;
-    error_log($_SESSION['chat_mode']);
+
+    //$_SESSION['chat_mode'] = $chat_mode->mode;
+    //error_log($_SESSION['chat_mode']);
     error_log($res2->systemText->expression);
     return $res2->systemText->expression;
+}
+
+function connectDataBase(): PDO
+{
+    $url = parse_url(getenv('DATABASE_URL'));
+    $dsn = sprintf('pgsql:host=%s;dbname=%s', $url['host'], substr($url['path'], 1));
+    $pdo = new PDO($dsn, $url['user'], $url['pass']);
+
+    return $pdo;
 }

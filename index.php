@@ -163,7 +163,7 @@ function chat($text, $userID, $displayName, $time1 ,$mode)
 //base64で送られてくるからdecodeし、さらにjson_decode
     $cmd_mode = base64_decode($res2->command);
     $chat_mode = json_decode($cmd_mode);
-
+    error_log($chat_mode->mode);
     //$_SESSION['chat_mode'] = $chat_mode->mode;
     //error_log($_SESSION['chat_mode']);
     error_log($res2->systemText->expression);

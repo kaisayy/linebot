@@ -50,7 +50,6 @@ if ($event->message->type == "text") {
         die();
     }
 
-    
     if( !($result = $stmt->fetch(PDO::FETCH_ASSOC))){//データが無ければ作成
        try{
           $stmt = $pdo->prepare("insert into siritori values(:userid, 'dialog')");
@@ -76,7 +75,7 @@ if ($event->message->type == "text") {
     }
 
     $replyMessage = chat($event->message->text, $event->source->userId, $displayName, $time1, $mode);
-    if(preg_match("#もう一回やりますか$#", $replyMessage)){
+    if(preg_match("#もう一回やりますか\？$#", $replyMessage)){
       try{
         $stmt = $pdo->prepare("update siritori set state = 'dialog' where userid = :userid");
         $stmt->bindParam(':userid', $event->source->userId, PDO::PARAM_STR);

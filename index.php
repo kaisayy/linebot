@@ -63,9 +63,13 @@ if ($event->message->type == "text") {
     }
     //データがあったら調べる
     if($mode == "dialog" && $event->message->text == "しりとり"){
+try{
       $stmt = $pdo->prepare("update siritori set state = 'srtr' where userid = :userid");
       $stmt->bindParam(':userid', $event->source->userId, PDO::PARAM_STR);
       $stmt->execute();
+       }catch(PDOException $e) {
+         error_log("PDO Error:".$e->getMessage()."\n");
+         die();
     }
     $mode = $result["status"];
 

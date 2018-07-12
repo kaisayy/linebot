@@ -68,6 +68,7 @@ if ($event->message->type == "text") {
         $stmt->execute();
       }
       $mode = $result["status"];
+      error_log($mode);
     }
 
     $replyMessage = chat($event->message->text, $event->source->userId, $displayName, $time1, $mode);

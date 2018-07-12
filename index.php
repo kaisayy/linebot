@@ -61,15 +61,13 @@ if ($event->message->type == "text") {
          die();
        }
     }
-    else{//データがあったら調べる
-      if($mode == "dialog" && $event->message->text == "しりとり"){
-        $stmt = $pdo->prepare("update siritori set status = 'srtr', where userid = :userid");
-        $stmt->bindParam(':userid', $event->source->userId, PDO::PARAM_STR);
-        $stmt->execute();
-      }
-      $mode = $result["status"];
-      error_log($mode);
+    //データがあったら調べる
+    if($mode == "dialog" && $event->message->text == "しりとり"){
+      $stmt = $pdo->prepare("update siritori set state = 'srtr', where userid = :userid");
+      $stmt->bindParam(':userid', $event->source->userId, PDO::PARAM_STR);
+      $stmt->execute();
     }
+    $mode = $result["status"];
 
     $replyMessage = chat($event->message->text, $event->source->userId, $displayName, $time1, $mode);
 

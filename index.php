@@ -52,11 +52,11 @@ if ($event->message->type == "text") {
 
     if( !($result = $stmt->fetch(PDO::FETCH_ASSOC))){//データが無ければ作成
        try{
-　　　　　if($event->message->text == "しりとり"){
-            $stmt = $pdo->prepare("insert into siritori values(:userid, 'srtr')");
-          }else{
+　　　　　//if($event->message->text == "しりとり"){
+            //$stmt = $pdo->prepare("insert into siritori values(:userid, 'srtr')");
+          //}else{
             $stmt = $pdo->prepare("insert into siritori values(:userid, 'dialog')");
-          }
+          //}
           $stmt->bindParam(':userid', $event->source->userId, PDO::PARAM_STR);   
           $stmt->execute();
        }catch(PDOException $e){

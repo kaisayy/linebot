@@ -5,9 +5,6 @@ require_once __DIR__ . '/vendor/autoload.php';
 date_default_timezone_set('Asia/Tokyo');
 $time1 = date('Y-m-d H:i:s');
 
-//セッション管理スタート
-session_start();
-
 error_log("start");
 
 // POSTを受け取る

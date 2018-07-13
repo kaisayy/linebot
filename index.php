@@ -56,6 +56,7 @@ if ($event->message->type == "text") {
             $stmt = $pdo->prepare("insert into siritori values(:userid, 'srtr')");
           }else{
             $stmt = $pdo->prepare("insert into siritori values(:userid, 'dialog')");
+          }
           $stmt->bindParam(':userid', $event->source->userId, PDO::PARAM_STR);   
           $stmt->execute();
        }catch(PDOException $e) {

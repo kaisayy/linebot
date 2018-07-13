@@ -95,7 +95,8 @@ if ($event->message->type == "text") {
       } 
     }    
 }
-else {
+else{
+    printf("絵文字やスタンプなどはわかりません。すみません。");
     return;
 }
 

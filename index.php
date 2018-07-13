@@ -50,20 +50,27 @@ if ($event->message->type == "text") {
         die();
     }
 
-    if( !($result = $stmt->fetch(PDO::FETCH_ASSOC))){//データが無ければ作成
+    if(!($result = $stmt->fetch(PDO::FETCH_ASSOC))){//データが無ければ作成
+      if($event->message->text == "しりとり"){
        try{
-　　　　　//if($event->message->text == "しりとり"){
-            //$stmt = $pdo->prepare("insert into siritori values(:userid, 'srtr')");
-          //}else{
-          //$stmt = $pdo->prepare("insert into siritori values(:userid, 'dialog')");
-          $stmt = $pdo->prepare("insert into siritori values(:userid, 'dialog')");
-          //}
+          $stmt = $pdo->prepare("insert into siritori values(:userid, 'srtr')");
           $stmt->bindParam(':userid', $event->source->userId, PDO::PARAM_STR);   
           $stmt->execute();
        }catch(PDOException $e){
          error_log("PDO Error:".$e->getMessage()."\n");
          die();
        }
+      }
+      else{
+       try{
+          $stmt = $pdo->prepare("insert into siritori values(:userid, 'dialog')");
+          $stmt->bindParam(':userid', $event->source->userId, PDO::PARAM_STR);   
+          $stmt->execute();
+       }catch(PDOException $e){
+         error_log("PDO Error:".$e->getMessage()."\n");
+         die();
+       }
+      }
     }
     $mode = $result["state"];
 

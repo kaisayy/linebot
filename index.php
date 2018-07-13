@@ -59,7 +59,7 @@ if ($event->message->type == "text") {
           }
           $stmt->bindParam(':userid', $event->source->userId, PDO::PARAM_STR);   
           $stmt->execute();
-       }catch(PDOException $e) {
+       }catch(PDOException $e){
          error_log("PDO Error:".$e->getMessage()."\n");
          die();
        }
